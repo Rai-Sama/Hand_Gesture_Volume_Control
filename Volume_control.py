@@ -8,11 +8,15 @@ from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 
-wCam, hCam = 640, 480 # Width & Height of the video
+wCam, hCam = 640, 720 # Width & Height of the video
 
+WINDOW_NAME = "Volume Controller"
 cap = cv2.VideoCapture(0)
-cap.set(3, wCam) # 3 means width cam
-cap.set(4, hCam) # 4 means height cam
+
+cv2.namedWindow(WINDOW_NAME, cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty(WINDOW_NAME, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+# cap.set(3, wCam) # 3 means width cam
+# cap.set(4, hCam) # 4 means height cam
 ptime = 0
 
 detector = htm.handDetector(detectionCon=0.7)
@@ -42,8 +46,8 @@ while True:
 	success, img = cap.read()
 
 	img = cv2.flip(img, 1) # Flipping the image horizontally (since, my webcam is fliped by default)
-	img = detector.findHands(img)
-	
+	img = detector.findHands(img) 
+
 	lmList = detector.findPosition(img, draw=False)
 	
 	
@@ -76,7 +80,7 @@ while True:
 
 	cv2.rectangle(img, (50, 150), (85, 400), (255, 0, 0), 3) # Initial volume bar
 	cv2.rectangle(img, (50, int(volBar)), (85, 400), (255, 0, 0), cv2.FILLED) # Adjusting the bar
-	cv2.putText(img, f'FPS: {int(volPer)} %', (40, 450), cv2.FONT_HERSHEY_PLAIN, 1.5, (255, 0, 0), 3) # printing volume percentage
+	cv2.putText(img, f'Volume: {int(volPer)} %', (40, 450), cv2.FONT_HERSHEY_PLAIN, 1.5, (255, 0, 0), 3) # printing volume percentage
 
 	# Calculating and displaying FPS
 	ctime = time.time()
@@ -84,6 +88,6 @@ while True:
 	ptime = ctime
 	cv2.putText(img, f'FPS: {int(fps)}', (5, 30), cv2.FONT_HERSHEY_PLAIN, 1.5, (255, 0, 0), 3)
 
-	cv2.imshow("Img", img)
-	if cv2.waitKey(1) & 0xFF == ord('q'): # Stop when q is pressed
-		break
+	cv2.imshow(WINDOW_NAME, img)
+	if cv2.waitKey(1) & 0xFF == 27: # Stop when Esc is pressed
+		break	

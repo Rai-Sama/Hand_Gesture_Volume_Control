@@ -21,7 +21,7 @@ class handDetector():
 
 		if self.results.multi_hand_landmarks:
 			for handLms in self.results.multi_hand_landmarks:
-				if draw:
+				if draw: # True by default; the lines connecting different landmarks on the hand will be drawn on screen
 					self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
 		return img		
 
